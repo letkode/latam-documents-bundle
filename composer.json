@@ -1,0 +1,38 @@
+{
+    "name": "letkode/latam-documents-bundle",
+    "description": "Latin American and Spanish document validation, normalization and formatting (DNI, RUT, CPF, CNPJ, CURP, RFC, CI, RUC, NIF, NIE, CIF and more).",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "keywords": ["latam", "document", "validation", "dni", "rut", "cpf", "curp", "nif"],
+    "require": {
+        "php": "^8.4",
+        "symfony/translation-contracts": "^3.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "phpstan/phpstan": "^2",
+        "phpunit/phpunit": "^11",
+        "symfony/translation": "^7.0 || ^8.0",
+        "symfony/http-kernel": "^7.0 || ^8.0",
+        "symfony/dependency-injection": "^7.0 || ^8.0",
+        "symfony/config": "^7.0 || ^8.0",
+        "symfony/yaml": "^7.0 || ^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Letkode\\LatamDocumentsBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Letkode\\LatamDocumentsBundle\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "symfony": {
+            "bundles": {
+                "Letkode\\LatamDocumentsBundle\\LetkodeLatamDocumentsBundle": ["all"]
+            }
+        }
+    }
+}

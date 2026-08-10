@@ -1,0 +1,16 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    Letkode\LatamDocumentsBundle\:
+        resource: '../src/'
+        exclude:
+            - '../src/LetkodeLatamDocumentsBundle.php'
+            - '../src/Contract/'
+            - '../src/Country/'
+            - '../src/DTO/'
+            - '../src/Enum/'
+            - '../src/Exception/'
+            - '../src/Translations/'

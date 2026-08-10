@@ -1,0 +1,3 @@
+document.invalid: 'El documento "%document%" no es válido para %country%/%type%.'
+document.unsupported: 'El tipo de documento %type% no está soportado para %country%.'
+document.format_error: 'No se puede formatear el documento "%document%".'
