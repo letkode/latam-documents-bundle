@@ -7,6 +7,7 @@ namespace Letkode\LatamDocumentsBundle\Tests;
 use Letkode\LatamDocumentsBundle\DocumentProcessor;
 use Letkode\LatamDocumentsBundle\Enum\CountryDocumentEnum;
 use Letkode\LatamDocumentsBundle\Enum\DocumentTypeEnum;
+use Letkode\LatamDocumentsBundle\Exception\InvalidDocumentCodeException;
 use Letkode\LatamDocumentsBundle\Exception\InvalidDocumentException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -77,6 +78,48 @@ final class DocumentProcessorTest extends TestCase
             self::assertSame('11111111', $e->raw);
             self::assertSame(CountryDocumentEnum::CL, $e->country);
             self::assertSame(DocumentTypeEnum::RUT, $e->type);
+        }
+    }
+
+    public function testProcessByCodeReturnsNullWhenRawIsNull(): void
+    {
+        $processor = new DocumentProcessor();
+
+        self::assertNull($processor->processByCode(null, 'CL', 'RUT'));
+    }
+
+    public function testProcessByCodeResolvesEnumsAndDelegatesToProcess(): void
+    {
+        $processor = new DocumentProcessor();
+        $result = $processor->processByCode('12.345.678-5', 'CL', 'RUT');
+
+        self::assertNotNull($result);
+        self::assertTrue($result->valid);
+        self::assertSame(CountryDocumentEnum::CL, $result->country);
+        self::assertSame(DocumentTypeEnum::RUT, $result->type);
+        self::assertSame('12.345.678-5', $result->formatted);
+    }
+
+    public function testProcessByCodeThrowsOnUnknownCountryCode(): void
+    {
+        $this->expectException(InvalidDocumentCodeException::class);
+        new DocumentProcessor()->processByCode('12.345.678-5', 'XX', 'RUT');
+    }
+
+    public function testProcessByCodeThrowsOnUnknownDocumentTypeCode(): void
+    {
+        $this->expectException(InvalidDocumentCodeException::class);
+        new DocumentProcessor()->processByCode('12.345.678-5', 'CL', 'XXX');
+    }
+
+    public function testInvalidDocumentCodeExceptionCarriesMetadata(): void
+    {
+        try {
+            new DocumentProcessor()->processByCode('12.345.678-5', 'XX', 'YYY');
+            self::fail('Expected InvalidDocumentCodeException');
+        } catch (InvalidDocumentCodeException $e) {
+            self::assertSame('XX', $e->countryCode);
+            self::assertSame('YYY', $e->documentTypeCode);
         }
     }
 }

@@ -7,6 +7,7 @@ namespace Letkode\LatamDocumentsBundle;
 use Letkode\LatamDocumentsBundle\DTO\DocumentResultDTO;
 use Letkode\LatamDocumentsBundle\Enum\CountryDocumentEnum;
 use Letkode\LatamDocumentsBundle\Enum\DocumentTypeEnum;
+use Letkode\LatamDocumentsBundle\Exception\InvalidDocumentCodeException;
 use Letkode\LatamDocumentsBundle\Exception\InvalidDocumentException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -45,6 +46,30 @@ final readonly class DocumentProcessor
         }
 
         return $result;
+    }
+
+    /**
+     * Convenience entry point for callers that hold country/document type as
+     * plain strings (e.g. loaded from a database) instead of the bundle's
+     * enums. `$countryCode` and `$documentTypeCode` must match
+     * `CountryDocumentEnum`/`DocumentTypeEnum` values exactly.
+     *
+     * `$raw === null` short-circuits to `null`, useful for optional fields.
+     */
+    public function processByCode(string|null $raw, string $countryCode, string $documentTypeCode): DocumentResultDTO|null
+    {
+        if (null === $raw) {
+            return null;
+        }
+
+        $country = CountryDocumentEnum::tryFrom($countryCode);
+        $type = DocumentTypeEnum::tryFrom($documentTypeCode);
+
+        if (null === $country || null === $type) {
+            throw new InvalidDocumentCodeException($countryCode, $documentTypeCode);
+        }
+
+        return $this->process($raw, $country, $type);
     }
 
     private function translateInvalid(string $raw, CountryDocumentEnum $country, DocumentTypeEnum $type): string

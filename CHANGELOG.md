@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-05
+
+### Added
+- `DocumentProcessor::processByCode()` convenience entry point for callers that
+  hold country and document type as plain strings (e.g. loaded from a database)
+  instead of the bundle's enums. Accepts `null` raw input and short-circuits to
+  `null` for optional fields.
+- `InvalidDocumentCodeException` thrown when the provided country or document
+  type code does not match `CountryDocumentEnum`/`DocumentTypeEnum`; carries the
+  offending `countryCode` and `documentTypeCode`.
+
 ## [1.0.0] - 2026-05-03
 
 ### Added
@@ -19,5 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Symfony Bundle support for seamless framework integration.
 - PHP 8.4+ support.
 
-[Unreleased]: https://github.com/letkode/latam-documents-bundle/compare/1.0.0...HEAD
+[Unreleased]: https://github.com/letkode/latam-documents-bundle/compare/1.1.0...HEAD
+[1.1.0]: https://github.com/letkode/latam-documents-bundle/compare/1.0.0...1.1.0
 [1.0.0]: https://github.com/letkode/latam-documents-bundle/releases/tag/1.0.0
